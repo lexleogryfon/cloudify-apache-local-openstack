@@ -1,0 +1,74 @@
+###
+###  Application Settings
+# # ######################
+
+## Install riemann dashboard 
+## - will install rubie gem
+install_riemman_dash: true
+
+
+
+
+###
+##   RabbitMQ settings
+# # ###################
+
+## Port for Dashboard - Not Implemented
+#rabbitmq_dash_port:15672
+
+## Crednetials for rabbit MQ Password - no bash sencitive character like ! \ $
+#rabbitmq_user: 'rabbitmq'
+#rabbitmq_pass: 'ra661tmq' 
+
+
+## Keepguest accoung - Not Implemented allways keeps guest
+#rabbitmq_keep_guest_user: true 
+
+
+###
+# #  Openstack Auth.
+### ##################
+
+keystone_username: 'tester'
+keystone_password: 'tester'
+keystone_tenant_name: 'testing'
+keystone_url: 'http://192.168.124.98:5000/v2.0/'
+region: 'RegionOne'
+
+## Speccial OpneStack Compute/Net. Settings
+
+# nova_url: ''
+# neutron_url: ''
+
+###
+# #  Openstack setup
+### ##################
+
+## Instance Setup
+qalyzer_server_image_id: 3fdeab74-2176-45da-aaa8-fccd7826b834
+qalyzer_server_flavor_id: 22
+#qalyzer_server_name:
+
+
+## Use existing resources
+## If you wish to deploy QAlyzer in Existing Network Setting
+use_existing_internal_network: true
+use_existing_internal_subnet: true
+use_existing_security_group : true
+use_existing_internal_router: true
+
+#use_existing_server: false
+
+## Resources Names
+external_network_name: 'external_network'
+internal_network_name: 'cfy_local_network'
+internal_subnet_name: 'cfy_local_subnet'
+internal_router_name: 'cfy_local_router'
+
+##Keypair Setup
+
+qalyser_server_use_existing_keypair: true
+
+qalyser_server_keypair_name: 'cfy_local_keypair'
+
+qalyser_server_ssh_key_filename: '~/.ssh/cfy_local_keypair.pem'

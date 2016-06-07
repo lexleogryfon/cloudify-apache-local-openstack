@@ -1,0 +1,148 @@
+dsl_definitions:
+
+  riemman_host_fabric_env: &RIEMMAN_HOST_FABRIC_ENV
+    host_string: { get_attribute: [  external_server_ip , floating_ip_address ] }
+    user: { get_input: instance_user }
+    key_filename: { get_property: [ qalyser_server_keypair, private_key_path ] }
+
+
+  rabbitmq_host_fabric_env: &RABBITMQ_HOST_FABRIC_ENV
+    host_string: { get_attribute: [  external_server_ip , floating_ip_address ] }
+    user: { get_input: instance_user }
+    key_filename: { get_property: [ qalyser_server_keypair, private_key_path ] }
+
+node_types:
+
+  QAlyzer.nodes.riemann:
+    derived_from: cloudify.nodes.Root
+    properties:
+      agent_config:
+        default:
+          install_method: none
+      install_rieman_dash:
+        description: Install riemann dashboard and Client utils
+        type: boolean
+        default: { get_input: install_riemman_dash }
+      langohr_jar_source_url:
+        description: Langohr JAR Source URL
+        type: string
+        default: { get_input: langohr_source_url }
+      daemonize_rpm_source_url:
+        description: Daemonize RPM Source URL
+        type: string
+        default: { get_input: daemonize_source_url }
+      riemann_rpm_source_url:
+        description: Riemann RPM Source URL
+        type: string
+        default: { get_input: riemann_source_url }
+      rabbitmq_username:
+        description: RabbitMQ username for access to queues.
+        type: string
+        default: { get_input: rabbitmq_user }
+      rabbitmq_password:
+        description: RabbitMQ password for access to queues.
+        type: string
+        default: { get_input: rabbitmq_pass }
+
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/riemann/scripts/create.sh
+            fabric_env:
+              default: *RIEMMAN_HOST_FABRIC_ENV
+        start:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/riemann/scripts/start.sh
+            fabric_env:
+              default: *RIEMMAN_HOST_FABRIC_ENV
+        stop:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/riemann/scripts/stop.sh
+            fabric_env: 
+              default: *RIEMMAN_HOST_FABRIC_ENV
+
+
+  QAlyzer.nodes.rabbitmq:
+    derived_from: cloudify.nodes.Root
+    properties:
+      agent_config:
+        default:
+          install_method: none
+      rabbitmq_username:
+        description: rabbitmq username
+        type: string
+        default: { get_input: rabbitmq_user }
+      rabbitmq_password:
+        description: rabbitmq password
+        type: string
+        default: { get_input: rabbitmq_pass }
+      source_url:
+        description: RabbitMQ RPM Download
+        type: string
+        default: { get_input: rabbitmq_source_url }
+        required: true
+      erlang_source_url:
+        description: erlang RPM Download
+        type: string
+        default: { get_input: erlang_source_url } 
+        required: true
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/rabbitmq/scripts/create.sh
+            fabric_env:
+              default: *RABBITMQ_HOST_FABRIC_ENV
+        start:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/rabbitmq/scripts/start.sh
+            fabric_env:
+              default: *RABBITMQ_HOST_FABRIC_ENV
+
+  QAlyzer.nodes.poc_utils:
+    derived_from: cloudify.nodes.Root
+    properties:
+      agent_config:
+        default:
+          install_method: none
+      rabbitmq_username:
+        description: RabbitMQ username for access to queues.
+        type: string
+        default: { get_input: rabbitmq_user }
+      rabbitmq_password:
+        description: RabbitMQ password for access to queues.
+        type: string
+        default: { get_input: rabbitmq_pass }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path:
+              default: components/poc_utils/scripts/create.sh
+            fabric_env:
+              default: *RABBITMQ_HOST_FABRIC_ENV
+
+relationships:
+
+  riemann_to_rabbitmq:
+    derived_from: cloudify.relationships.connected_to
+
+  poc_utils_to_rabbitmq:
+    derived_from: cloudify.relationships.depends_on
+
+  poc_utils_to_riemann:
+    derived_from: cloudify.relationships.depends_on
+
+

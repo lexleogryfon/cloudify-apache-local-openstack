@@ -1,0 +1,11 @@
+[Unit]
+Description=Riemann Service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+EnvironmentFile=-/etc/sysconfig/riemann
+ExecStart=/usr/bin/riemann -a ${RIEMANN_CONFIG_PATH}/riemann.config
+
+[Install]
+WantedBy=multi-user.target

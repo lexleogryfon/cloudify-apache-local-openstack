@@ -1,0 +1,11 @@
+[Unit]
+Description=Riemann Dashboard
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+EnvironmentFile=-/etc/sysconfig/riemann-dash
+ExecStart=/usr/local/bin/riemann-dash ${RIEMANN_CONFIG_PATH}/dash.config
+
+[Install]
+WantedBy=multi-user.target
