@@ -1,31 +1,4 @@
 ###
-###  Application Settings
-# # ######################
-
-## Install riemann dashboard 
-## - will install rubie gem
-#install_riemman_dash: true
-
-
-
-
-###
-##   RabbitMQ settings
-# # ###################
-
-## Port for Dashboard - Not Implemented
-#rabbitmq_dash_port:15672
-
-## Crednetials for rabbit MQ Password - no bash sencitive character like ! \ $
-#rabbitmq_user: 'rabbitmq'
-#rabbitmq_pass: 'ra661tmq' 
-
-
-## Keepguest accoung - Not Implemented allways keeps guest
-#rabbitmq_keep_guest_user: true 
-
-
-###
 # #  Openstack Auth.
 ### ##################
 
@@ -66,9 +39,6 @@ internal_subnet_name: 'cloudify-management-network-subnet'
 internal_router_name: 'alex_router'
 
 ##Keypair Setup
-
 qalyser_server_use_existing_keypair: true
-
 qalyser_server_keypair_name: 'lex02-agent-public-keyname'
-
 qalyser_server_ssh_key_filename: '~/.ssh/cloudify-agent-kp.pem'
