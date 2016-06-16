@@ -1,12 +1,9 @@
 tosca_definitions_version: cloudify_dsl_1_2
 
 description: >
-  This blueprint uses the cloudify fabric (SSH) plugin to install a
-  mongo database, node, and a nodejs application. It is called simple,
+  This blueprint creates VM in openstack, then uses the cloudify fabric (SSH) plugin  to install a apache httpd. It doesn't require cfy-Manager, and should be executed   via "cfy cli local execute -w install". It is called simple,
   because it sets up no other infrastructure needed to support the
-  application. You need to provide the IP, SSH key, and username of
-  the machine where you want to install Mongo, and Node/Node
-  application. It's fine for them all to be on the same machine.
+  application. You need to provide the input credentials for open stack. It's fine t  o use some pre-existing resources like router.
 
 
 ##
@@ -18,7 +15,7 @@ imports:
   - http://www.getcloudify.org/spec/cloudify/3.3/types.yaml
   - http://www.getcloudify.org/spec/openstack-plugin/1.3/plugin.yaml
   - http://www.getcloudify.org/spec/fabric-plugin/1.3/plugin.yaml
-  - types/qalyzer-types.yaml
+#  - types/qalyzer-types.yaml
 
 ##
 ##  Inputs
@@ -29,25 +26,25 @@ inputs:
 ##  Aplication setup inputs
 #############################
 
-  install_riemman_dash:
-    type: boolean
-    default: false
+ # install_riemman_dash:
+ #   type: boolean
+ #   default: false
 
 ##
 ##  RabbitMQ inputs
 #############################
 
-  rabbitmq_user:
-    type: string
-    default: rabbitmq
+  # rabbitmq_user:
+  #   type: string
+  #   default: rabbitmq
 
-  rabbitmq_pass:
-    type: string
-    default: ra661tmq
+  # rabbitmq_pass:
+  #   type: string
+  #   default: ra661tmq
 
-  rabbitmq_keep_guest_user:
-    type: boolean
-    default: false
+  # rabbitmq_keep_guest_user:
+  #   type: boolean
+  #   default: false
 
 ##
 ##  Openstack auth. inputs
@@ -161,25 +158,25 @@ inputs:
 ##  Download Path
 #############################
 
-  langohr_source_url:
-    type: string
-    default: http://repository.cloudifysource.org/org/cloudify3/components/langohr.jar
+  # langohr_source_url:
+  #   type: string
+  #   default: http://repository.cloudifysource.org/org/cloudify3/components/langohr.jar
 
-  daemonize_source_url:
-    type: string
-    default: http://repository.cloudifysource.org/org/cloudify3/components/daemonize-1.7.3-7.el7.x86_64.rpm
+  # daemonize_source_url:
+  #   type: string
+  #   default: http://repository.cloudifysource.org/org/cloudify3/components/daemonize-1.7.3-7.el7.x86_64.rpm
 
-  riemann_source_url:
-    type: string
-    default: http://repository.cloudifysource.org/org/cloudify3/components/riemann-0.2.6-1.noarch.rpm
+  # riemann_source_url:
+  #   type: string
+  #   default: http://repository.cloudifysource.org/org/cloudify3/components/riemann-0.2.6-1.noarch.rpm
 
-  erlang_source_url:
-    type: string
-    default: http://repository.cloudifysource.org/org/cloudify3/components/erlang-17.4-1.el6.x86_64.rpm
+  # erlang_source_url:
+  #   type: string
+  #   default: http://repository.cloudifysource.org/org/cloudify3/components/erlang-17.4-1.el6.x86_64.rpm
 
-  rabbitmq_source_url:
-    type: string
-    default: http://repository.cloudifysource.org/org/cloudify3/components/rabbitmq-server-3.5.3-1.noarch.rpm
+  # rabbitmq_source_url:
+  #   type: string
+  #   default: http://repository.cloudifysource.org/org/cloudify3/components/rabbitmq-server-3.5.3-1.noarch.rpm
 
 ##
 ## DSL Defenitions
@@ -256,14 +253,14 @@ node_templates:
         - port: 22
           remote_ip_prefix: '0.0.0.0/0'
           #riemman dash port
-        - port: 4567
-          remote_ip_prefix: '0.0.0.0/0'
-          #riemann TCP port
-        - port: 5556
-          remote_ip_prefix: '0.0.0.0/0'
-          #rabbit MQ dash port          
-        - port: 15672
-          remote_ip_prefix: '0.0.0.0/0'
+        # - port: 4567
+        #   remote_ip_prefix: '0.0.0.0/0'
+        #   #riemann TCP port
+        # - port: 5556
+        #   remote_ip_prefix: '0.0.0.0/0'
+        #   #rabbit MQ dash port          
+        # - port: 15672
+        #   remote_ip_prefix: '0.0.0.0/0'
 
   qalyser_router:
     type: cloudify.openstack.nodes.Router
@@ -303,32 +300,32 @@ node_templates:
       - target: qalyzer_security_group
         type: cloudify.openstack.server_connected_to_security_group
 
-  rabbitmq_service:
-    type: QAlyzer.nodes.rabbitmq
-    relationships:
-      - type: cloudify.relationships.contained_in
-        target: qalyser_server
+  # rabbitmq_service:
+  #   type: QAlyzer.nodes.rabbitmq
+  #   relationships:
+  #     - type: cloudify.relationships.contained_in
+  #       target: qalyser_server
 
-  riemann_service:
-    type: QAlyzer.nodes.riemann
-    relationships:
-      - type: cloudify.relationships.contained_in
-        target: qalyser_server
+  # riemann_service:
+  #   type: QAlyzer.nodes.riemann
+  #   relationships:
+  #     - type: cloudify.relationships.contained_in
+  #       target: qalyser_server
 
-      - type: riemann_to_rabbitmq
-        target: rabbitmq_service
+  #     - type: riemann_to_rabbitmq
+  #       target: rabbitmq_service
 
-  poc_utils:
-    type: QAlyzer.nodes.poc_utils
-    relationships:
-      - type: cloudify.relationships.contained_in
-        target: qalyser_server
+  # poc_utils:
+  #   type: QAlyzer.nodes.poc_utils
+  #   relationships:
+  #     - type: cloudify.relationships.contained_in
+  #       target: qalyser_server
 
-      - type: poc_utils_to_rabbitmq
-        target: rabbitmq_service
+  #     - type: poc_utils_to_rabbitmq
+  #       target: rabbitmq_service
 
-      - type: poc_utils_to_riemann
-        target: riemann_service
+  #     - type: poc_utils_to_riemann
+  #       target: riemann_service
 
 
 outputs:

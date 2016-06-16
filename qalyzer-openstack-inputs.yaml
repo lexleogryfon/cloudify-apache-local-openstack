@@ -4,7 +4,7 @@
 
 ## Install riemann dashboard 
 ## - will install rubie gem
-install_riemman_dash: true
+#install_riemman_dash: true
 
 
 
@@ -29,11 +29,11 @@ install_riemman_dash: true
 # #  Openstack Auth.
 ### ##################
 
-keystone_username: 'tester'
-keystone_password: 'tester'
-keystone_tenant_name: 'testing'
-keystone_url: 'http://192.168.124.98:5000/v2.0/'
-region: 'RegionOne'
+keystone_username: ''
+keystone_password: ''
+keystone_tenant_name: 'gigaspaces_field_engineers'
+keystone_url: 'https://compute.datacentred.io:5000'
+region: 'sal01'
 
 ## Speccial OpneStack Compute/Net. Settings
 
@@ -45,8 +45,8 @@ region: 'RegionOne'
 ### ##################
 
 ## Instance Setup
-qalyzer_server_image_id: 3fdeab74-2176-45da-aaa8-fccd7826b834
-qalyzer_server_flavor_id: 22
+qalyzer_server_image_id: ebab03e6-a674-4b6e-8f60-691c90fbcdc6
+qalyzer_server_flavor_id: 8e6069a3-d8c6-4741-8e0d-6373b2ca38cc
 #qalyzer_server_name:
 
 
@@ -54,21 +54,21 @@ qalyzer_server_flavor_id: 22
 ## If you wish to deploy QAlyzer in Existing Network Setting
 use_existing_internal_network: true
 use_existing_internal_subnet: true
-use_existing_security_group : true
+use_existing_security_group : false
 use_existing_internal_router: true
 
 #use_existing_server: false
 
 ## Resources Names
-external_network_name: 'external_network'
-internal_network_name: 'cfy_local_network'
-internal_subnet_name: 'cfy_local_subnet'
-internal_router_name: 'cfy_local_router'
+external_network_name: 'external'
+internal_network_name: 'cloudify-management-network'
+internal_subnet_name: 'cloudify-management-network-subnet'
+internal_router_name: 'alex_router'
 
 ##Keypair Setup
 
 qalyser_server_use_existing_keypair: true
 
-qalyser_server_keypair_name: 'cfy_local_keypair'
+qalyser_server_keypair_name: 'lex02-agent-public-keyname'
 
-qalyser_server_ssh_key_filename: '~/.ssh/cfy_local_keypair.pem'
+qalyser_server_ssh_key_filename: '~/.ssh/cloudify-agent-kp.pem'
