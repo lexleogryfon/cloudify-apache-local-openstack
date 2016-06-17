@@ -206,6 +206,9 @@ node_templates:
           #ssh port
         - port: 22
           remote_ip_prefix: '0.0.0.0/0'
+          #web httpd apache port
+        - port: 80
+          remote_ip_prefix: '0.0.0.0/0'
 
   qalyser_router:
     type: cloudify.openstack.nodes.Router
@@ -256,18 +259,20 @@ node_templates:
           inputs:
             tasks_file: scripts/apache/create_fab.py
             task_name: install_apache
-            fabric_env:             
+            fabric_env:
+                  host_string: { get_attribute: [  external_server_ip , floating_ip_address ] }
                   user: centos
-                  key_filename: /home/centos/.ssh/cloudify-agent-kp.pem
+                  key_filename: /home/vagrant/.ssh/cloudify-agent-kp.pem
 
         start:
           implementation: fabric.fabric_plugin.tasks.run_script
           inputs:
             # Path to the script relative to the blueprint directory
             script_path: scripts/apache/start.py
-            fabric_env:               
+            fabric_env:
+                  host_string: { get_attribute: [  external_server_ip , floating_ip_address ] } 
                   user: centos
-                  key_filename: /home/centos/.ssh/cloudify-agent-kp.pem
+                  key_filename: /home/vagrant/.ssh/cloudify-agent-kp.pem
 
         stop: scripts/apache/stop.py
 
