@@ -255,7 +255,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_task
           inputs:
             tasks_file: scripts/apache/create_fab.py
-            task_name:: install_apache
+            task_name: install_apache
             fabric_env:             
                   user: centos
                   key_filename: /home/centos/.ssh/cloudify-agent-kp.pem
